@@ -211,7 +211,7 @@ def _load_wordvec(embed_file, word_dim, vocab=None):
 
 def build_embedding_matrix(vocab, word_dim=300):
     data_file = os.path.join('dats', 'embedding_matrix.dat') # cache for embedding matrix
-    embed_file = os.path.join('..', 'glove', 'glove.840B.300d.txt') # glove pre-trained word embeddings
+    embed_file = os.path.join('glove', 'glove.840B.300d.txt') # glove pre-trained word embeddings
     if os.path.exists(data_file):
         print(f"loading embedding matrix: {data_file}")
         embedding_matrix = pickle.load(open(data_file, 'rb'))
