@@ -191,7 +191,7 @@ class CRF(nn.Module):
         # Start transition and first emission
         # shape: (batch_size, num_tags)
         score = self.start_transitions + emissions[0]
-        history = []
+        history = list()
         
         # score is a tensor of size (batch_size, num_tags) where for every batch,
         # value at column j stores the score of the best tag sequence so far that ends
@@ -234,12 +234,12 @@ class CRF(nn.Module):
         
         # shape: (batch_size,)
         seq_ends = mask.long().sum(dim=0) - 1
-        best_tags_list = []
+        best_tags_list = list()
         
         for idx in range(batch_size):
             # Find the tag which maximizes the score at the last timestep; this is our best tag
             # for the last timestep
-            _, best_last_tag = score[idx].max(dim=0)
+            _, best_last_tag = score[idx].max(0)
             
             # We trace back where the best last tag comes from, append that to our best tag
             # sequence, and trace it back again, and so on

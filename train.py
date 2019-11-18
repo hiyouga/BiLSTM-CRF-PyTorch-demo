@@ -1,5 +1,6 @@
 import os
 import sys
+import math
 import torch
 import argparse
 import numpy as np
@@ -40,15 +41,16 @@ class Instructor:
             if param.requires_grad:
                 if 'word_embedding' in name: # don't initialize word embeddings while using pre-trained embeddings
                     pass
-                elif 'embedding' in name: # treat embedding matrices as special cases
-                    weight = opt.initializer(torch.empty(*param.shape))
-                    weight[0] = 0. # the vector corresponding to padding index shuold be zero
+                elif 'embedding' in name: # treat other embedding matrices as special cases
+                    weight = self.opt.initializer(torch.zeros_like(param))
+                    weight[0] = torch.tensor(0., dtype=param.dtype, device=param.device) # the vector corresponding to padding index shuold be zero
                     setattr(param, 'data', weight)
                 else:
                     if len(param.shape) > 1:
                         self.opt.initializer(param) # for weight matrices
                     else:
-                        torch.nn.init.zeros_(param) # for bias vectors
+                        stdv = 1. / math.sqrt(param.shape[0])
+                        torch.nn.init.uniform_(param, a=-stdv, b=stdv) # for bias vectors
     
     def _train(self, optimizer, criterion, dataloader):
         train_loss, n_train = 0, 0
@@ -99,6 +101,7 @@ class Instructor:
         val_dataloader = DataLoader(dataset=self.valset, batch_size=self.opt.batch_size, shuffle=False) # validation dataloader
         test_dataloader = DataLoader(dataset=self.testset, batch_size=self.opt.batch_size, shuffle=False) # testing dataloader
         
+        self._reset_params()
         best_val_f1 = 0 # record the best f1 score on validation set
         for epoch in range(self.opt.num_epoch):
             train_loss = self._train(optimizer, criterion, train_dataloader) # train model
