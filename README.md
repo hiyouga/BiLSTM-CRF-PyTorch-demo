@@ -4,12 +4,12 @@
 
 ## Requirement
 
-- PyTorch >= 0.4.0
-- NumPy >= 1.13.3
+- PyTorch 1.2.0
+- NumPy 1.17
 - Python 3.6
 - GloVe pre-trained word vectors:
   * Download pre-trained word vectors [here](https://github.com/stanfordnlp/GloVe#download-pre-trained-word-vectors).
-  * Extract the [glove.42B.300d.zip](http://nlp.stanford.edu/data/wordvecs/glove.42B.300d.zip) to the `\glove\` folder.
+  * Extract the [glove.840B.300d.zip](http://nlp.stanford.edu/data/wordvecs/glove.840B.300d.zip) to the `/glove/` folder.
 
 ## Dataset
 
